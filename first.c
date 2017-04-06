@@ -1,5 +1,3 @@
-
- 
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -13,10 +11,10 @@
 
     }node_t;
 
-void main()
+void main1()
 {
-   
-    
+
+
 int i=0;
 node_t *head,*temp =NULL;
 

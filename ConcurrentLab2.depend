@@ -1,0 +1,9 @@
+# depslib dependency file v1.0
+1491494505 source:/home/chanaka/CodeBlocks/ConcurrentLab2/main.c
+	<stdio.h>
+	<stdlib.h>
+
+1491493501 source:/home/chanaka/CodeBlocks/ConcurrentLab2/first.c
+	<stdio.h>
+	<stdlib.h>
+
