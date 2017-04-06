@@ -17,5 +17,5 @@ void main()
 
 	printf("head is ");
 	printf("%d",head->next->data);
-	return 0;
+	return 0;//test
 }
