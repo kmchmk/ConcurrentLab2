@@ -10,7 +10,7 @@ void main()
 {
 
 	struct node* head = malloc(sizeof(node));
-	head->data = 12;
+	head->data = 11;
 	struct node* temp = malloc(sizeof(node));
 	temp->data = 45;
 	head->next = temp;
