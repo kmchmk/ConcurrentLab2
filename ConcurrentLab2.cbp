@@ -31,6 +31,12 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
+		<Unit filename="ConcurrentLab2.cbp" />
+		<Unit filename="ConcurrentLab2.depend" />
+		<Unit filename="ConcurrentLab2.layout" />
+		<Unit filename="first.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="main.c">
 			<Option compilerVar="CC" />
 		</Unit>
