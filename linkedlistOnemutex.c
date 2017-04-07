@@ -2,8 +2,9 @@
 #include <stdlib.h>
 #include <time.h>
 #include <pthread.h>
+#include<stdbool.h>
 
-//Generate random numbers between 0 - 2^16
+//Generate random numbers between 0 - 2^16-1
 const int max_rand_num = 65535;
 
 struct node {
@@ -11,9 +12,9 @@ struct node {
     struct node* next;
 };
 
-int Member(int value, struct node* head_p);
-int Insert(int value, struct node** head_pp);
-int Delete(int value, struct node** head_pp);
+bool member(struct node* head, int value);
+int insert(struct node* head,int value);
+bool delete(struct node* head, int value);
 
 struct node *head = NULL;
 
@@ -37,7 +38,7 @@ int main(int argc, char** argv) {
 
     //user must enter 7 arguements
     if (argc != 7) {
-        printf("You must enter 7 Arguements");
+        printf("\nYou must enter 7 Arguements\n");
         exit(EXIT_FAILURE);
     }
 
@@ -50,9 +51,9 @@ int main(int argc, char** argv) {
     float m_insert = strtof(argv[5], NULL);
     float m_delete = strtof(argv[6], NULL);
 
-    total_member_operations = (int) (m * m_member);
-    total_insert_operations = (int) (m * m_insert);
-    total_delete_operations = (int) (m * m_delete);
+    total_member_ops = (int) (m * m_member);
+    total_insert_ops = (int) (m * m_insert);
+    total_delete_ops = (int) (m * m_delete);
 
     //creating linked list and assigning random values 
     srand(time(NULL));
@@ -60,7 +61,7 @@ int main(int argc, char** argv) {
     int temp_count = 0;
     while (temp_count < n) {
         int tmp_value = rand() % max_rand_num;
-        temp_count += Insert(tmp_value, &head);
+        temp_count += insert(head,tmp_value);
     }
 
     pthread_t *thread_handles;
@@ -104,12 +105,12 @@ bool member(struct node* head, int value){
     return false;
 }
 
-void insert(struct node* head,int value){
+int insert(struct node* head,int value){
     struct node* tempNode = head;
     while(tempNode->next != NULL){
         tempNode = tempNode->next;
     }
-    tempNode->next = malloc(sizeof(node));
+    tempNode->next = malloc(sizeof(struct node));
     tempNode->next->data = value;
     return 1;
 }
@@ -150,7 +151,7 @@ void *using_one_mutex() {
 
             if (member_operations_count < total_member_ops) {
                 int tmp_value = rand() % max_rand_num;
-                member(&head,tmp_value);
+                member(head,tmp_value);
                 member_operations_count++;
             } else {
                 countof_member_oprations_completed = 1;
@@ -163,7 +164,7 @@ void *using_one_mutex() {
 
             if (insert_operations_count < total_insert_ops) {
                 int tmp_value = rand() % max_rand_num;
-                Insert(&head,tmp_value);
+                insert(head,tmp_value);
                 insert_operations_count++;
             } else {
                countof_insert_oprations_completed= 1;
@@ -175,7 +176,7 @@ void *using_one_mutex() {
 
             if (delete_operations_count < total_delete_ops) {
                 int tmp_value = rand() % max_rand_num;
-                Delete(&head,tmp_value);
+                delete(head,tmp_value);
                 delete_operations_count++;
             } else {
                 countof_delete_oprations_completed = 1;
