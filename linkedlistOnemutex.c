@@ -3,6 +3,7 @@
 #include <time.h>
 #include <pthread.h>
 #include<stdbool.h>
+#include<math.h>
 
 //Generate random numbers between 0 - 2^16-1
 const int max_rand_num = 65535;
@@ -12,9 +13,10 @@ struct node {
     struct node* next;
 };
 
-bool member(struct node* head, int value);
-int insert(struct node* head,int value);
-bool delete(struct node* head, int value);
+int member(struct node* head_p ,int value);
+int insert(struct node** head_pp,int value) ;
+int delete(struct node** head_pp,int value) ;
+//int* randomNumber(int howMany) ;
 
 struct node *head = NULL;
 
@@ -35,21 +37,25 @@ int total_insert_ops;
 int total_delete_ops;
 
 int main(int argc, char** argv) {
-
     //user must enter 7 arguements
     if (argc != 7) {
-        printf("\nYou must enter 7 Arguements\n");
+        printf("\nYou must enter 6 Arguements\n");
         exit(EXIT_FAILURE);
     }
 
-    int thread_count = (int) strtol(argv[1], NULL, 10);
+    int thread_count;
 
-    n = (int) strtol(argv[2], NULL, 10);
+    
+   thread_count  = (int) strtol(argv[1], NULL, 10);
+   
+
+   n = (int) strtol(argv[2], NULL, 10);
     m = (int) strtol(argv[3], NULL, 10);
 
     float m_member = strtof(argv[4], NULL);
     float m_insert = strtof(argv[5], NULL);
-    float m_delete = strtof(argv[6], NULL);
+    float m_delete = strtof(argv[6], NULL);  
+
 
     total_member_ops = (int) (m * m_member);
     total_insert_ops = (int) (m * m_insert);
@@ -61,7 +67,7 @@ int main(int argc, char** argv) {
     int temp_count = 0;
     while (temp_count < n) {
         int tmp_value = rand() % max_rand_num;
-        temp_count += insert(head,tmp_value);
+        temp_count += insert(&head,tmp_value);
     }
 
     pthread_t *thread_handles;
@@ -92,44 +98,96 @@ int main(int argc, char** argv) {
     return 0;
 }
 
-bool member(struct node* head, int value){
-    struct node* tempNode = head;
-    while(tempNode != NULL){
-        if(tempNode->data == value){
-            return true;
-        }
-        else{
-            tempNode = tempNode->next;
-        }
+/*int* randomNumber(int howMany){
+    int max = pow(2,16);
+    int numberArray[max];
+    for (int i = 0; i < max; i++){
+        numberArray[i] = i;
     }
-    return false;
+    srand(time(NULL));
+    for (int i = 0; i < max; i++){
+        int randNum = rand()%(max);
+        int temp = numberArray[i];
+        numberArray[i] = numberArray[randNum];
+        numberArray[randNum] = temp;
+    }
+
+    int* randomArray = malloc(howMany);
+
+    for(int i =0; i < howMany; i++){
+        randomArray[i] = numberArray[i];
+        //printf("%d ", randomArray[i]);
+    }
+
+    return randomArray;
+
+}
+*/
+int member(struct node* head_p ,int value) {
+    struct node* curr_p = head_p;
+    while (curr_p != NULL && curr_p->data < value) {
+        curr_p = curr_p->next;
+    }
+
+    if (curr_p == NULL || curr_p->data > value) {
+        return 0;
+    } else {
+        return 1;
+    }
+
 }
 
-int insert(struct node* head,int value){
-    struct node* tempNode = head;
-    while(tempNode->next != NULL){
-        tempNode = tempNode->next;
+//insert function
+
+int insert(struct node** head_pp,int value) {
+    struct node* curr_p = *head_pp;
+    struct node* pred_p = NULL;
+    struct node* temp_p;
+
+    while (curr_p != NULL && curr_p->data < value) {
+        pred_p = curr_p;
+        curr_p = curr_p->next;
     }
-    tempNode->next = malloc(sizeof(struct node));
-    tempNode->next->data = value;
-    return 1;
+
+    if (curr_p == NULL || curr_p->data > value) {
+        temp_p = malloc(sizeof (struct node));
+        temp_p->data = value;
+        temp_p->next = curr_p;
+        if (pred_p == NULL)
+            *head_pp = temp_p;
+        else
+            pred_p->next = temp_p;
+        return 1;
+    } else {
+        return 0;
+    }
+
 }
 
 
-bool delete(struct node* head, int value){
-    struct node* previouseTempNode = head;
-    struct node* middleTempNode = previouseTempNode->next;
-    struct node* nextTempNode = middleTempNode->next;
-    while(middleTempNode != NULL){
-        previouseTempNode = previouseTempNode->next;
-        middleTempNode = previouseTempNode->next;
-        nextTempNode = middleTempNode->next;
-        if(middleTempNode->data == value){
-            previouseTempNode->next = nextTempNode;
-            return true;
-        }
+//delete function
+
+int delete(struct node** head_pp,int value) {
+    struct node* curr_p = *head_pp;
+    struct node* pred_p = NULL;
+
+    while (curr_p != NULL && curr_p->data < value) {
+        pred_p = curr_p;
+        curr_p = curr_p->next;
     }
-    return false;
+
+    if (curr_p != NULL && curr_p->data == value) {
+        if (pred_p == NULL) {
+            *head_pp = curr_p->next;
+            free(curr_p);
+        } else {
+            pred_p->next = curr_p->next;
+            free(curr_p);
+        }
+        return 1;
+    } else {
+        return 0;
+    }
 }
 
 // run random operations on the link list according to given fractions
@@ -164,7 +222,7 @@ void *using_one_mutex() {
 
             if (insert_operations_count < total_insert_ops) {
                 int tmp_value = rand() % max_rand_num;
-                insert(head,tmp_value);
+                insert(&head,tmp_value);
                 insert_operations_count++;
             } else {
                countof_insert_oprations_completed= 1;
@@ -176,7 +234,7 @@ void *using_one_mutex() {
 
             if (delete_operations_count < total_delete_ops) {
                 int tmp_value = rand() % max_rand_num;
-                delete(head,tmp_value);
+                delete(&head,tmp_value);
                 delete_operations_count++;
             } else {
                 countof_delete_oprations_completed = 1;
