@@ -16,7 +16,7 @@ struct node
 
 void create()
 {
-    head = NULL;//malloc(sizeof(node));
+    head = NULL;
 }
 
 
@@ -38,7 +38,6 @@ bool member(int value){
 
 void insert(int value)
 {
-    //printf("start-b-%d\n",value);
     if(head == NULL)
     {
         head = malloc(sizeof(node));
@@ -51,14 +50,10 @@ void insert(int value)
         while(tempNode->next != NULL)
         {
             tempNode = tempNode->next;
-            //printf("-%d\n",tempNode);
         }
-        //printf("x");
         tempNode->next = malloc(sizeof(node));
-        //printf("y");
         tempNode->next->data = value;
         tempNode->next->next = NULL;
-        //printf("z");
     }
 
 }
@@ -115,7 +110,6 @@ int* randomNumber(int howMany, int numberOfInsert)
     for(int i =0; i < howMany; i++)
     {
         randomArray[i] = numberArray[i];
-        //printf("%d ", randomArray[i]);
     }
 
     insertingNumbers = malloc(numberOfInsert * sizeof(int));
@@ -133,12 +127,12 @@ int* randomFunction(int m, float m_member, float m_insert, float m_delete)
 {
 
     int numberOfMember = m * m_member;
-    int numberOfInsert = m * m_insert; //this is global
+    int numberOfInsert = m * m_insert;
     int numberOfDelete = m * m_delete;
 
-    printf("\nNumber of member : %d\n",numberOfMember);
-    printf("Number of insert : %d\n",numberOfInsert);
-    printf("Number of delete : %d\n",numberOfDelete);
+    printf("\nNumber of member operations : %d\n",numberOfMember);
+    printf("Number of insert operations : %d\n",numberOfInsert);
+    printf("Number of delete operations : %d\n",numberOfDelete);
 
     int m_real = numberOfMember + numberOfInsert + numberOfDelete;
 
@@ -146,9 +140,6 @@ int* randomFunction(int m, float m_member, float m_insert, float m_delete)
     {
         printf("\nSum of fractions should be 1.\n");
     }
-
-    //printf("%f\n",m_member + m_insert + m_delete);
-
 
     int* functionArray = malloc(m_real * sizeof(int));
     for (int i = 0; i < numberOfMember; i++)
@@ -172,11 +163,6 @@ int* randomFunction(int m, float m_member, float m_insert, float m_delete)
         functionArray[randNum] = temp;
     }
 
-    for(int i =0; i < m_real; i++)
-    {
-        //printf("%d ", functionArray[i]);
-    }
-
     return functionArray;
 }
 
@@ -185,21 +171,21 @@ int main()
 {
     int n, m;
     printf("Input \"n\": ");
-    n = 10000;//scanf("%d",&n);
+    scanf("%d",&n);
     printf("Input \"m\": ");
-    m = 100000;//scanf("%d",&m);
+    scanf("%d",&m);
     printf("\n");
 
     float m_member, m_insert, m_delete;
     printf("Enter fractions:\n");
     printf("\tMember: ");
-    m_member = 0.4;//scanf("%f",&m_member);
+    scanf("%f",&m_member);
     printf("\tInsert: ");
-    m_insert = 0.3;//scanf("%f",&m_insert);
+    scanf("%f",&m_insert);
     printf("\tDelete: ");
-    m_delete = 0.3;//scanf("%f",&m_delete);
+    scanf("%f",&m_delete);
 
-    create();
+    create();//create the linked list
     int *randomNumberArray = randomNumber(n, m * m_insert);
 
     for(int i = 0; i < n; i++)
@@ -212,8 +198,6 @@ int main()
     int func;
     int j = 0;
     srand(time(NULL));
-
-
     clock_t start, end;
     double processTime;
     printf("\nProcess started.");
@@ -238,21 +222,6 @@ int main()
     end = clock();//time ends here
     printf("\nProcess finished.");
     printf("\nElapsed time (Serial) = %f millisecs.", 1000 * ((double) (end - start)) / CLOCKS_PER_SEC);
-
-
-
-/*
-    create();
-    insert(10);
-    insert (11);
-    delete(11);
-    if(member(10)){
-        printf("\n10 member\n");
-    }
-    if(member(11)){
-        printf("\n11 member\n");
-    }
-*/
 
     return 0;
 }
