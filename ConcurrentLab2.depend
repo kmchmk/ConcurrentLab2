@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1491632717 source:/home/chanaka/CodeBlocks/ConcurrentLab2/main.c
+1491633259 source:/home/chanaka/CodeBlocks/ConcurrentLab2/main.c
 	<stdio.h>
 	<stdlib.h>
 	<stdbool.h>
@@ -9,4 +9,27 @@
 1491493501 source:/home/chanaka/CodeBlocks/ConcurrentLab2/first.c
 	<stdio.h>
 	<stdlib.h>
+
+1491667679 source:/home/chanaka/CodeBlocks/ConcurrentLab2/mutex.c
+	<stdio.h>
+	<stdlib.h>
+	<stdbool.h>
+	<math.h>
+	<time.h>
+	<pthread.h>
+
+1491579705 source:/home/chanaka/CodeBlocks/ConcurrentLab2/linkedlistOnemutex.c
+	<stdio.h>
+	<stdlib.h>
+	<time.h>
+	<pthread.h>
+	<stdbool.h>
+	<math.h>
+
+1491660287 source:/home/chanaka/CodeBlocks/ConcurrentLab2/serial.c
+	<stdio.h>
+	<stdlib.h>
+	<stdbool.h>
+	<math.h>
+	<time.h>
 
