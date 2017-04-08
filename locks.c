@@ -3,10 +3,19 @@
 #include<stdbool.h>
 #include<math.h>
 #include<time.h>
+#include<pthread.h>
+
 
 const int max = pow(2,16);
 int *insertingNumbers;
+pthread_mutex_t mutex;
 struct node* head;
+int *randomNumberArray;
+int *randomFunctionArray;
+int numberOfThreads;
+int insertingNumberIndex = 0;
+int n,m;
+pthread_rwlock_t lock;
 
 struct node
 {
@@ -20,12 +29,15 @@ void create()
 }
 
 
-bool member(int value){
+bool member(int value)
+{
+    //printf("member\n");
     struct node* tempNode = head;
     while(tempNode != NULL)
     {
         if(tempNode->data == value)
         {
+            //printf("\n%d is a member\n",value);
             return true;
         }
         else
@@ -38,12 +50,14 @@ bool member(int value){
 
 void insert(int value)
 {
+    //printf("insert\n");
     //printf("start-b-%d\n",value);
     if(head == NULL)
     {
         head = malloc(sizeof(node));
         head->data = value;
         head->next = NULL;
+        insertingNumberIndex = insertingNumberIndex + 1;
     }
     else
     {
@@ -59,6 +73,7 @@ void insert(int value)
         tempNode->next->data = value;
         tempNode->next->next = NULL;
         //printf("z");
+        insertingNumberIndex = insertingNumberIndex + 1;
     }
 
 }
@@ -66,6 +81,7 @@ void insert(int value)
 
 void delete(int value)
 {
+    //printf("delete\n");
     if(head->data == value)
     {
         head = head->next;
@@ -181,9 +197,86 @@ int* randomFunction(int m, float m_member, float m_insert, float m_delete)
 }
 
 
+void* threadFunction(void* arg)
+{
+    int *threadNumber_ptr = (int*)arg;
+    int threadNumber = *threadNumber_ptr;
+    //printf("\nthreadNumber is - %d.\n",threadNumber);
+    int numberOfprocessesPerThread = m/numberOfThreads;
+    //printf("\nprocesses per thread - %d\n", numberOfprocessesPerThread);
+    int func;
+    for(int i = 0; i < numberOfprocessesPerThread; i++)
+    {
+        func = randomFunctionArray[(numberOfprocessesPerThread * threadNumber) + i];
+        if(func == 0)
+        {
+            //pthread_mutex_lock(&lock);
+            pthread_rwlock_rdlock(&lock);
+            //printf("tid - %d member\n",threadNumber);
+            member(rand() % max);
+            pthread_rwlock_unlock(&lock);
+            //pthread_mutex_unlock(&lock);
+        }
+        else if(func == 1)
+        {
+            pthread_rwlock_wrlock(&lock);
+            ///printf("tid - %d insert\n",threadNumber);
+            insert(insertingNumbers[insertingNumberIndex]);
+            pthread_rwlock_unlock(&lock);
+        }
+        else if(func == 2)
+        {
+            pthread_rwlock_wrlock(&lock);
+            //printf("tid - %d delete\n",threadNumber);
+            delete(randomNumberArray[rand() % n]);
+            pthread_rwlock_unlock(&lock);
+        }
+    }
+    //printf("\nthread %d finished\n", threadNumber);
+    pthread_exit(0);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 int main()
 {
-    int n, m;
+    /*long long limit = 1000000;
+    pthread_t tid1;
+    pthread_t tid2;
+    pthread_create(&tid1, NULL, sum_runner1, &limit);
+    pthread_create(&tid2, NULL, sum_runner2, &limit);
+    for(long long i = 1; i <= limit; i++)
+    {
+        sum2 = sum2  + i;
+    }
+    pthread_join(tid1,NULL);
+    pthread_join(tid2,NULL);
+    printf("sum is %lld\n", sum1);
+    printf("sum is %lld\n", 2 * sum2);
+    printf("sum is %lld\n", sum3);
+    */
+
+
+
+
+
+
+
+
+
     printf("Input \"n\": ");
     n = 10000;//scanf("%d",&n);
     printf("Input \"m\": ");
@@ -193,66 +286,60 @@ int main()
     float m_member, m_insert, m_delete;
     printf("Enter fractions:\n");
     printf("\tMember: ");
-    m_member = 0.4;//scanf("%f",&m_member);
+    m_member = 1;//scanf("%f",&m_member);
     printf("\tInsert: ");
-    m_insert = 0.3;//scanf("%f",&m_insert);
+    m_insert = 0;//scanf("%f",&m_insert);
     printf("\tDelete: ");
-    m_delete = 0.3;//scanf("%f",&m_delete);
+    m_delete = 0;//scanf("%f",&m_delete);
 
-    create();
-    int *randomNumberArray = randomNumber(n, m * m_insert);
+    printf("Input \"Number of threads\": ");
+    scanf("%d",&numberOfThreads);
+
+    printf("\n%d",numberOfThreads);
+
+    create();//create head
+    randomNumberArray = randomNumber(n, m * m_insert);
 
     for(int i = 0; i < n; i++)
     {
         insert(randomNumberArray[i]); //populate the array
     }
+    insertingNumberIndex = 0;//set insertingNumberIndex to 0 for "insert operation"
+    randomFunctionArray = randomFunction(m, m_member, m_insert, m_delete);
 
-    int *randomFunctionArray = randomFunction(m, m_member, m_insert, m_delete);
-
-    int func;
-    int j = 0;
-    srand(time(NULL));
-
-
-    clock_t start, end;
-    double processTime;
-    printf("\nProcess started.");
-    start = clock();//time starts here
+    /*printf("\nrandomFunctionArray is - ");
     for(int i = 0; i < m; i++)
     {
-        func = randomFunctionArray[i];
-        if(func == 0)
-        {
-            member(rand() % max);
-        }
-        else if(func == 1)
-        {
-            insert(insertingNumbers[j]);
-            j++;
-        }
-        else if(func == 2)
-        {
-            delete(randomNumberArray[rand() % n]);
-        }
+        printf("%d ", randomFunctionArray[i]);
+    }
+    printf("\n");
+    */
+
+    //create m thread ids
+    pthread_t* ids = malloc(numberOfThreads * sizeof(pthread_t));
+
+    srand(time(NULL));
+    clock_t start, end;
+    double processTime;
+    printf("\nProcess started.\n");
+    int tempThreadIdArray[numberOfThreads];//= malloc(numberOfThreads * sizeof(int));
+    start = clock();//time starts here
+    for(int i = 0; i < numberOfThreads; i++)
+    {
+        tempThreadIdArray[i] = i;
+        pthread_create(&ids[i], NULL, threadFunction, &tempThreadIdArray[i]);
+        //member(rand() % max);
+
+    }
+    for(int i = 0; i < numberOfThreads; i++)
+    {
+        pthread_join(ids[i],NULL);
     }
     end = clock();//time ends here
     printf("\nProcess finished.");
-    printf("\nElapsed time (Serial) = %f millisecs.", 1000 * ((double) (end - start)) / CLOCKS_PER_SEC);
+    printf("\nElapsed time (rw locks) = %f millisecs.", 1000 * ((double) (end - start)) / CLOCKS_PER_SEC);
 
-
-
-/*
-    create();
-    insert(10);
-    insert (11);
-    delete(11);
-    if(member(10)){
-        printf("\n10 member\n");
-    }
-    if(member(11)){
-        printf("\n11 member\n");
-    }
-*/
 
     return 0;
 }
+

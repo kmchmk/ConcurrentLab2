@@ -10,7 +10,7 @@
 	<stdio.h>
 	<stdlib.h>
 
-1491667679 source:/home/chanaka/CodeBlocks/ConcurrentLab2/mutex.c
+1491678345 source:/home/chanaka/CodeBlocks/ConcurrentLab2/mutex.c
 	<stdio.h>
 	<stdlib.h>
 	<stdbool.h>
@@ -26,10 +26,18 @@
 	<stdbool.h>
 	<math.h>
 
-1491660287 source:/home/chanaka/CodeBlocks/ConcurrentLab2/serial.c
+1491671137 source:/home/chanaka/CodeBlocks/ConcurrentLab2/serial.c
 	<stdio.h>
 	<stdlib.h>
 	<stdbool.h>
 	<math.h>
 	<time.h>
+
+1491684302 source:/home/chanaka/CodeBlocks/ConcurrentLab2/locks.c
+	<stdio.h>
+	<stdlib.h>
+	<stdbool.h>
+	<math.h>
+	<time.h>
+	<pthread.h>
 

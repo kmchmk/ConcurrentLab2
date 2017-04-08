@@ -38,10 +38,13 @@
 		<Unit filename="ConcurrentLab2.cbp" />
 		<Unit filename="ConcurrentLab2.depend" />
 		<Unit filename="ConcurrentLab2.layout" />
-		<Unit filename="first.c">
+		<Unit filename="locks.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="mutex.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="serial.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Extensions>

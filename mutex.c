@@ -31,7 +31,7 @@ void create()
 
 bool member(int value)
 {
-    printf("member\n");
+    //printf("member\n");
     struct node* tempNode = head;
     while(tempNode != NULL)
     {
@@ -50,7 +50,7 @@ bool member(int value)
 
 void insert(int value)
 {
-    printf("insert\n");
+    //printf("insert\n");
     //printf("start-b-%d\n",value);
     if(head == NULL)
     {
@@ -81,7 +81,7 @@ void insert(int value)
 
 void delete(int value)
 {
-    printf("delete\n");
+    //printf("delete\n");
     if(head->data == value)
     {
         head = head->next;
@@ -199,10 +199,17 @@ int* randomFunction(int m, float m_member, float m_insert, float m_delete)
 
 void* threadFunction(void* arg)
 {
+    //printf("\nrandomFunctionArray is - ");
+    //for(int i = 0; i < m; i++){
+        //printf("%d ", randomFunctionArray[i]);
+   // }
+    //printf("\n");
 
     int *threadNumber_ptr = (int*)arg;
     int threadNumber = *threadNumber_ptr;
+    //printf("\nthreadNumber is - %d.\n",threadNumber);
     int numberOfprocessesPerThread = m/numberOfThreads;
+    //printf("\nprocesses per thread - %d\n", numberOfprocessesPerThread);
     int func;
     for(int i = 0; i < numberOfprocessesPerThread; i++)
     {
@@ -210,22 +217,27 @@ void* threadFunction(void* arg)
         if(func == 0)
         {
             pthread_mutex_lock(&lock);
+            //printf("tid - %d member\n",threadNumber);
             member(rand() % max);
             pthread_mutex_unlock(&lock);
         }
         else if(func == 1)
         {
             pthread_mutex_lock(&lock);
+            //printf("tid - %d insert\n",threadNumber);
             insert(insertingNumbers[insertingNumberIndex]);
             pthread_mutex_unlock(&lock);
         }
         else if(func == 2)
         {
             pthread_mutex_lock(&lock);
+            //printf("tid - %d delete\n",threadNumber);
             delete(randomNumberArray[rand() % n]);
             pthread_mutex_unlock(&lock);
         }
     }
+    printf("\nthread %d finished\n", threadNumber);
+    pthread_exit(0);
 }
 
 
@@ -270,9 +282,9 @@ int main()
 
 
     printf("Input \"n\": ");
-    n = 10;//scanf("%d",&n);
+    n = 1000;//scanf("%d",&n);
     printf("Input \"m\": ");
-    m = 10;//scanf("%d",&m);
+    m = 100000;//scanf("%d",&m);
     printf("\n");
 
     float m_member, m_insert, m_delete;
@@ -285,13 +297,14 @@ int main()
     m_delete = 0.3;//scanf("%f",&m_delete);
 
     printf("Input \"Number of threads\": ");
-    numberOfThreads = 1;//scanf("%d",&numberOfThreads);
-    printf("\n");
+    scanf("%d",&numberOfThreads);
+
+    printf("\n%d",numberOfThreads);
 
     create();//create head
     randomNumberArray = randomNumber(n, m * m_insert);
 
-    for(int i = 0; i<10; i++)
+    for(int i = 0; i < n; i++)
     {
         insert(randomNumberArray[i]); //populate the array
     }
@@ -306,10 +319,12 @@ int main()
     clock_t start, end;
     double processTime;
     printf("\nProcess started.");
+    int tempThreadIdArray[numberOfThreads];//= malloc(numberOfThreads * sizeof(int));
     start = clock();//time starts here
     for(int i = 0; i < numberOfThreads; i++)
     {
-        pthread_create(&ids[i], NULL, threadFunction, &i);
+        tempThreadIdArray[i] = i;
+        pthread_create(&ids[i], NULL, threadFunction, &tempThreadIdArray[i]);
         //member(rand() % max);
 
     }
@@ -319,9 +334,7 @@ int main()
     }
     end = clock();//time ends here
     printf("\nProcess finished.");
-    printf("\nElapsed time = %f millisecs.", 1000 * ((double) (end - start)) / CLOCKS_PER_SEC);
-
-
+    printf("\nElapsed time (mutex) = %f millisecs.", 1000 * ((double) (end - start)) / CLOCKS_PER_SEC);
 
 
     return 0;
