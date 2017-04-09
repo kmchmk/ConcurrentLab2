@@ -20,16 +20,16 @@ gcc serial_case_2.c -o serial_case_2
 gcc serial_case_3.c -o serial_case_3
 gcc mutex_case_1_thread_1.c -o mutex_case_1_thread_1
 gcc mutex_case_1_thread_2.c -o mutex_case_1_thread_2
-gcc mutex_case_1_thread_4.c
-gcc mutex_case_1_thread_8.c
-gcc mutex_case_2_thread_1.c
-gcc mutex_case_2_thread_2.c
-gcc mutex_case_2_thread_4.c
-gcc mutex_case_2_thread_8.c
-gcc mutex_case_3_thread_1.c
-gcc mutex_case_3_thread_2.c
-gcc mutex_case_3_thread_4.c
-gcc mutex_case_3_thread_8.c
+gcc mutex_case_1_thread_4.c -o mutex_case_1_thread_4
+gcc mutex_case_1_thread_8.c -o mutex_case_1_thread_8
+gcc mutex_case_2_thread_1.c -o mutex_case_2_thread_1
+gcc mutex_case_2_thread_2.c -o mutex_case_2_thread_2
+gcc mutex_case_2_thread_4.c -o mutex_case_2_thread_4
+gcc mutex_case_2_thread_8.c -o mutex_case_2_thread_8
+gcc mutex_case_3_thread_1.c -o mutex_case_3_thread_1
+gcc mutex_case_3_thread_2.c -o mutex_case_3_thread_2
+gcc mutex_case_3_thread_4.c -o mutex_case_3_thread_4
+gcc mutex_case_3_thread_8.c -o mutex_case_3_thread_8
 
 for (( c=1; c<=100; c++ ))
 do  
