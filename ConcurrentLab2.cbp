@@ -38,13 +38,40 @@
 		<Unit filename="ConcurrentLab2.cbp" />
 		<Unit filename="ConcurrentLab2.depend" />
 		<Unit filename="ConcurrentLab2.layout" />
-		<Unit filename="locks.c">
+		<Unit filename="locks_case_1_ thread_1.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="mutex.c">
+		<Unit filename="locks_case_1_ thread_2.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="serial.c">
+		<Unit filename="locks_case_1_ thread_4.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="locks_case_1_ thread_8.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="locks_case_2_ thread_1.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="locks_case_2_ thread_2.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="locks_case_2_ thread_4.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="locks_case_2_ thread_8.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="locks_case_3_ thread_1.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="locks_case_3_ thread_2.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="locks_case_3_ thread_4.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="locks_case_3_ thread_8.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Extensions>
