@@ -16,6 +16,7 @@ struct node {
 int member(struct node* head_p ,int value);
 int insert(struct node** head_pp,int value) ;
 int delete(struct node** head_pp,int value) ;
+bool isMember(int val) ;
 //int* randomNumber(int howMany) ;
 
 struct node *head = NULL;
@@ -36,7 +37,9 @@ int total_member_ops;
 int total_insert_ops;
 int total_delete_ops;
 
+
 int main(int argc, char** argv) {
+   
     //user must enter 7 arguements
     if (argc != 7) {
         printf("\nYou must enter 6 Arguements\n");
@@ -60,14 +63,21 @@ int main(int argc, char** argv) {
     total_member_ops = (int) (m * m_member);
     total_insert_ops = (int) (m * m_insert);
     total_delete_ops = (int) (m * m_delete);
-
+    int a[n]={0};
     //creating linked list and assigning random values 
     srand(time(NULL));
-
+    // store the random values
     int temp_count = 0;
+    int i =0 ;
     while (temp_count < n) {
         int tmp_value = rand() % max_rand_num;
+        if(isMember(tmp_value)){
+                      continue;
+                }else {
         temp_count += insert(&head,tmp_value);
+               a[i] =tmp_value ;  
+		i++ ;
+           }
     }
 
     pthread_t *thread_handles;
@@ -96,6 +106,23 @@ int main(int argc, char** argv) {
 
     printf("Time taken using one mutex is : %f \n", time_taken);
     return 0;
+}
+
+bool isMember(int val){
+int j=0 ; 
+for (j=0;j<sizeof(a);j++){
+        if(a[j]==val)
+           return true;
+        else{ 
+	   if(j==sizeof(a)-1){
+                break;
+	  }else
+           continue ;
+          
+       }     
+     
+    }
+return false;
 }
 
 /*int* randomNumber(int howMany){
