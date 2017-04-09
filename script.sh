@@ -64,4 +64,32 @@ do
 	./serial_case_1
 	./serial_case_2
 	./serial_case_3
+	./mutex_case_1_thread_1
+	./mutex_case_1_thread_2
+	./mutex_case_1_thread_4
+	./mutex_case_1_thread_8
+	./mutex_case_2_thread_1
+	./mutex_case_2_thread_2
+	./mutex_case_2_thread_4
+	./mutex_case_2_thread_8
+	./mutex_case_3_thread_1
+	./mutex_case_3_thread_2
+	./mutex_case_3_thread_4
+	./mutex_case_3_thread_8
+
+	./locks_case_1_thread_1	
+	./locks_case_1_thread_2
+	./locks_case_1_thread_4
+	./locks_case_1_thread_8
+	./locks_case_2_thread_1
+	./locks_case_2_thread_2
+	./locks_case_2_thread_4
+	./locks_case_2_thread_8
+	./locks_case_3_thread_1
+	./locks_case_3_thread_2
+	./locks_case_3_thread_4
+	./locks_case_3_thread_8
+
+
+
 done
