@@ -227,22 +227,34 @@ void* threadFunction(void* arg)
 int main()
 {
     printf("Input \"n\": ");
-    scanf("%d",&n);
+    n = 1000;
+    printf("%d\n",n);
+    //scanf("%d",&n);
     printf("Input \"m\": ");
-    scanf("%d",&m);
+    m = 10000;
+    printf("%d",m);
+    //scanf("%d",&m);
     printf("\n");
 
     float m_member, m_insert, m_delete;
     printf("Enter fractions:\n");
     printf("\tMember: ");
-    scanf("%f",&m_member);
+    m_member = 0.90;
+    printf("%f\n",m_member);
+    //scanf("%f",&m_member);
     printf("\tInsert: ");
-    scanf("%f",&m_insert);
+    m_insert = 0.05;
+    printf("%f\n",m_insert);
+    //scanf("%f",&m_insert);
     printf("\tDelete: ");
-    scanf("%f",&m_delete);
+    m_delete = 0.05;
+    printf("%f\n",m_delete);
+    //scanf("%f",&m_delete);
 
     printf("Input \"Number of threads\": ");
-    scanf("%d",&numberOfThreads);
+    numberOfThreads = 8;
+    printf("%d\n",numberOfThreads);
+    //scanf("%d",&numberOfThreads);
 
     create();//create linked list
     randomNumberArray = randomNumber(n, m * m_insert);
@@ -274,8 +286,22 @@ int main()
     }
     end = clock();//time ends here
     printf("\nProcess finished.");
-    printf("\nElapsed time (mutex) = %f millisecs.\n", 1000 * ((double) (end - start)) / CLOCKS_PER_SEC);
+    double elapsedTime = 1000 * ((double) (end - start)) / CLOCKS_PER_SEC;
+    printf("\nElapsed time (mutex_case_2_thread_8) = %f millisecs.\n\n", elapsedTime);
+
+    FILE *f = fopen("mutex_case_2_thread_8.txt", "a");
+    //fprintf(f, "n = %d, m = %d, m_member = %f, m_insert = %f, m_delete = %f\n", n, m, m_member, m_insert, m_delete);
+    if (f == NULL)
+    {
+        printf("Error opening file!\n");
+        exit(1);
+    }
+
+    fprintf(f, "%f\n", elapsedTime);
+    fclose(f);
+
+    free(randomNumberArray);
+    free(randomFunctionArray);
 
     return 0;
 }
-
