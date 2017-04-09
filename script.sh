@@ -33,7 +33,7 @@ gcc serial_case_1.c -o serial_case_1
 gcc serial_case_2.c -o serial_case_2
 gcc serial_case_3.c -o serial_case_3
 
-gcc mutex_case_1_thread_1.c -o mutex_case_1_thread_1
+gcc mutex_case_1_thread_1.c -o mutex_case_1_thread_1 -pthread
 gcc mutex_case_1_thread_2.c -o mutex_case_1_thread_2
 gcc mutex_case_1_thread_4.c -o mutex_case_1_thread_4
 gcc mutex_case_1_thread_8.c -o mutex_case_1_thread_8
@@ -64,6 +64,7 @@ do
 	./serial_case_1
 	./serial_case_2
 	./serial_case_3
+
 	./mutex_case_1_thread_1
 	./mutex_case_1_thread_2
 	./mutex_case_1_thread_4
@@ -89,7 +90,4 @@ do
 	./locks_case_3_thread_2
 	./locks_case_3_thread_4
 	./locks_case_3_thread_8
-
-
-
 done
