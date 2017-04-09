@@ -3,10 +3,19 @@
 #include<stdbool.h>
 #include<math.h>
 #include<time.h>
+#include<pthread.h>
+
 
 const int max = pow(2,16);
 int *insertingNumbers;
+pthread_mutex_t mutex;
 struct node* head;
+int *randomNumberArray;
+int *randomFunctionArray;
+int numberOfThreads;
+int insertingNumberIndex = 0;
+int n,m;
+pthread_mutex_t lock;
 
 struct node
 {
@@ -20,7 +29,8 @@ void create()
 }
 
 
-bool member(int value){
+bool member(int value)
+{
     struct node* tempNode = head;
     while(tempNode != NULL)
     {
@@ -43,6 +53,7 @@ void insert(int value)
         head = malloc(sizeof(node));
         head->data = value;
         head->next = NULL;
+        insertingNumberIndex = insertingNumberIndex + 1;
     }
     else
     {
@@ -54,8 +65,8 @@ void insert(int value)
         tempNode->next = malloc(sizeof(node));
         tempNode->next->data = value;
         tempNode->next->next = NULL;
+        insertingNumberIndex = insertingNumberIndex + 1;
     }
-
 }
 
 
@@ -167,61 +178,130 @@ int* randomFunction(int m, float m_member, float m_insert, float m_delete)
 }
 
 
+void* threadFunction(void* arg)
+{
+    int *threadNumber_ptr = (int*)arg;
+    int threadNumber = *threadNumber_ptr;
+    int numberOfprocessesPerThread = m/numberOfThreads;
+    int func;
+    for(int i = 0; i < numberOfprocessesPerThread; i++)
+    {
+        func = randomFunctionArray[(numberOfprocessesPerThread * threadNumber) + i];
+        if(func == 0)
+        {
+            pthread_mutex_lock(&lock);
+            member(rand() % max);
+            pthread_mutex_unlock(&lock);
+        }
+        else if(func == 1)
+        {
+            pthread_mutex_lock(&lock);
+            insert(insertingNumbers[insertingNumberIndex]);
+            pthread_mutex_unlock(&lock);
+        }
+        else if(func == 2)
+        {
+            pthread_mutex_lock(&lock);
+            delete(randomNumberArray[rand() % n]);
+            pthread_mutex_unlock(&lock);
+        }
+    }
+    pthread_exit(0);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 int main()
 {
-    int n, m;
     printf("Input \"n\": ");
-    scanf("%d",&n);
+    n = 1000;
+    printf("%d\n",n);
+    //scanf("%d",&n);
     printf("Input \"m\": ");
-    scanf("%d",&m);
+    m = 10000;
+    printf("%d",m);
+    //scanf("%d",&m);
     printf("\n");
 
     float m_member, m_insert, m_delete;
     printf("Enter fractions:\n");
     printf("\tMember: ");
-    scanf("%f",&m_member);
+    m_member = 0.50;
+    printf("%f\n",m_member);
+    //scanf("%f",&m_member);
     printf("\tInsert: ");
-    scanf("%f",&m_insert);
+    m_insert = 0.25;
+    printf("%f\n",m_insert);
+    //scanf("%f",&m_insert);
     printf("\tDelete: ");
-    scanf("%f",&m_delete);
+    m_delete = 0.25;
+    printf("%f\n",m_delete);
+    //scanf("%f",&m_delete);
 
-    create();//create the linked list
-    int *randomNumberArray = randomNumber(n, m * m_insert);
+    printf("Input \"Number of threads\": ");
+    numberOfThreads = 4;
+    printf("%d\n",numberOfThreads);
+    //scanf("%d",&numberOfThreads);
+
+    create();//create linked list
+    randomNumberArray = randomNumber(n, m * m_insert);
 
     for(int i = 0; i < n; i++)
     {
         insert(randomNumberArray[i]); //populate the array
     }
+    insertingNumberIndex = 0;//set insertingNumberIndex to 0 for "insert operation"
+    randomFunctionArray = randomFunction(m, m_member, m_insert, m_delete);
 
-    int *randomFunctionArray = randomFunction(m, m_member, m_insert, m_delete);
+    //create m thread ids
+    pthread_t* ids = malloc(numberOfThreads * sizeof(pthread_t));
 
-    int func;
-    int j = 0;
     srand(time(NULL));
     clock_t start, end;
     double processTime;
     printf("\nProcess started.");
+    int tempThreadIdArray[numberOfThreads];
     start = clock();//time starts here
-    for(int i = 0; i < m; i++)
+    for(int i = 0; i < numberOfThreads; i++)
     {
-        func = randomFunctionArray[i];
-        if(func == 0)
-        {
-            member(rand() % max);
-        }
-        else if(func == 1)
-        {
-            insert(insertingNumbers[j]);
-            j++;
-        }
-        else if(func == 2)
-        {
-            delete(randomNumberArray[rand() % n]);
-        }
+        tempThreadIdArray[i] = i;
+        pthread_create(&ids[i], NULL, threadFunction, &tempThreadIdArray[i]);
+    }
+    for(int i = 0; i < numberOfThreads; i++)
+    {
+        pthread_join(ids[i],NULL);
     }
     end = clock();//time ends here
     printf("\nProcess finished.");
-    printf("\nElapsed time (Serial) = %f millisecs.", 1000 * ((double) (end - start)) / CLOCKS_PER_SEC);
+    double elapsedTime = 1000 * ((double) (end - start)) / CLOCKS_PER_SEC;
+    printf("\nElapsed time (mutex_case_3_thread_4) = %f millisecs.\n\n", elapsedTime);
+
+    FILE *f = fopen("mutex_case_3_thread_4.txt", "a");
+    //fprintf(f, "n = %d, m = %d, m_member = %f, m_insert = %f, m_delete = %f\n", n, m, m_member, m_insert, m_delete);
+    if (f == NULL)
+    {
+        printf("Error opening file!\n");
+        exit(1);
+    }
+
+    fprintf(f, "%f\n", elapsedTime);
+    fclose(f);
+
+    free(randomNumberArray);
+    free(randomFunctionArray);
 
     return 0;
 }
